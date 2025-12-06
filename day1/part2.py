@@ -1,25 +1,8 @@
-# Following the same rotations as in the above example, the dial points at zero a few extra times during its rotations:
-# 
-# The dial starts by pointing at 50.
-# The dial is rotated L68 to point at 82; during this rotation, it points at 0 once.
-# The dial is rotated L30 to point at 52.
-# The dial is rotated R48 to point at 0.
-# The dial is rotated L5 to point at 95.
-# The dial is rotated R60 to point at 55; during this rotation, it points at 0 once.
-# The dial is rotated L55 to point at 0.
-# The dial is rotated L1 to point at 99.
-# The dial is rotated L99 to point at 0.
-# The dial is rotated R14 to point at 14.
-# The dial is rotated L82 to point at 32; during this rotation, it points at 0 once.
-# In this example, the dial points at 0 three times at the end of a rotation,
-# plus three more times during a rotation. So, in this example, the new password
-# would be 6.
-rotations = []
+from load_data import load_data
 
-with open('part1.txt', 'r') as fh:
-    for line in fh:
-        value = int(line.strip()[1:])
-        rotations.append(-1*value if line.startswith('L') else value)
+data = load_data('part1', 'real')
+data = [s.strip() for s in data]
+data = [-int(s[1:]) if s.startswith('L') else int(s[1:]) for s in data]
 
 
 def zero_crossings(start, rot):
@@ -33,12 +16,12 @@ def zero_crossings(start, rot):
             if start + rot > 0:
                 return 0
             else:
-                return 1 + abs(rot) // 100
- 
+                return 1 + (abs(rot) - start) // 100
 
-def count_zero_crossings(rots, start=50, print_res=False):
+            
+def count_zero_crossings(data, start=50, print_res=False):
     counter = 0
-    for rot in rots:
+    for rot in data:
         new_start = (start + rot) % 100
         counter += zero_crossings(start, rot)
         if print_res:
@@ -50,26 +33,8 @@ def count_zero_crossings(rots, start=50, print_res=False):
     return counter
 
 
-def main():
-        print(count_zero_crossings(rotations, print_res=True))
+def part2():
+    print(count_zero_crossings(data))
 
 
-main()
-
-
-if __name__ == '__main__':
-    mots = """L68
-    L30
-    R48
-    L5
-    R60
-    L55
-    L1
-    L99
-    R14
-    L82""".splitlines()
-    mots = [m.strip() for m in mots]
-
-    mots = [-1*int(m[1:]) if m.startswith('L') else int(m[1:])
-            for m in mots]
-    # print(count_zero_crossings(mots, print_res=True))
+part2()
